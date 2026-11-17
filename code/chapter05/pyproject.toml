@@ -1,0 +1,24 @@
+[project]
+name = "chapter05"
+version = "0.1.0"
+description = "Listings for Chapter 5 — Context window management."
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.50",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q"
+
+[tool.uv]
+package = false

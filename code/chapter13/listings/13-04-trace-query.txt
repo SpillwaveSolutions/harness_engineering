@@ -1,0 +1,15 @@
+-- Find all execute_tool spans for a conversation that had an error.type set
+-- (Substitute your backend's actual column names for gen_ai.tool.call.result, etc.)
+SELECT
+    span_id,
+    span_name,
+    duration_ms,
+    attributes->>'gen_ai.tool.name'        AS tool_name,
+    attributes->>'gen_ai.tool.call.id'     AS tool_call_id,
+    attributes->>'gen_ai.tool.call.result' AS tool_result,
+    attributes->>'error.type'              AS error_type
+FROM spans
+WHERE
+    attributes->>'gen_ai.conversation.id' = :conversation_id
+    AND span_name LIKE 'execute_tool%'
+ORDER BY start_time_unix_nano ASC;

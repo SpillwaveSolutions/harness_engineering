@@ -1,0 +1,26 @@
+[project]
+name = "chapter04"
+version = "0.1.0"
+description = "Listings for Chapter 4 — Anatomy of a harness."
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.50",
+    "pydantic>=2",
+    "claude-agent-sdk>=0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q"
+
+[tool.uv]
+package = false

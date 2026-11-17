@@ -1,0 +1,31 @@
+[project]
+name = "harness-book-chapter13"
+version = "0.1.0"
+description = "Code listings + tests for Chapter 13 — Observability and drift detection for the harness."
+requires-python = ">=3.13"
+dependencies = [
+    "opentelemetry-api>=1.24.0",
+    "opentelemetry-sdk>=1.24.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.24.0",
+    "anthropic>=0.28.0",
+    "langsmith>=0.1.0",
+    "langfuse>=3",
+    "pandas>=2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q"
+asyncio_mode = "auto"
+
+[tool.uv]
+package = false

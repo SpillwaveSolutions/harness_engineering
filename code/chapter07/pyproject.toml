@@ -1,0 +1,31 @@
+[project]
+name = "chapter07"
+version = "0.1.0"
+description = "Listings for Chapter 7 — retrieval, rerank, and agentic search."
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.50",
+    "cohere>=5.0",
+    "numpy>=2.0",
+    "rank-bm25>=0.2.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+]
+# sentence-transformers is large. Install with: uv sync --all-groups
+ml = [
+    "sentence-transformers>=3.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q"
+
+[tool.uv]
+package = false

@@ -1,0 +1,4 @@
+# Total input-token rate by model — multiply by per-model price to get cost/second
+sum by (gen_ai_request_model) (
+  rate(gen_ai_client_token_usage_count{token_type="input"}[5m])
+)

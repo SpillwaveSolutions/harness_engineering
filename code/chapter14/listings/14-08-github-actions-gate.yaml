@@ -1,0 +1,32 @@
+# .github/workflows/eval-gate.yml
+name: Evaluation Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  promotion-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install harness eval dependencies
+        run: pip install -r requirements/eval.txt
+
+      - name: Run promotion gate                          # ①
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python gates/run_promotion_gate.py \
+            --eval-dataset eval/golden_dataset.json \
+            --baseline-scores eval/baseline_scores.json
+
+      # The script exits 0 on PASS, non-zero on FAIL.    # ②
+      # GitHub Actions reads the exit code.
+      # If this step fails, the merge button is disabled.

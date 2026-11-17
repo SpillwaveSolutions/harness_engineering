@@ -1,0 +1,23 @@
+[project]
+name = "chapter11"
+version = "0.1.0"
+description = "Listings for Chapter 11 — Adversarial agents and the human in the loop."
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q"
+asyncio_mode = "auto"
+
+[tool.uv]
+package = false

@@ -1,0 +1,44 @@
+# Three-layer cost model for the travel-booking harness
+# Fill in your own numbers before committing to a framework or a scale target
+
+token_cost:
+  model: claude-sonnet-4-6
+  price_input_per_mtok: 3.00
+  price_output_per_mtok: 15.00
+  daily_conversations: 1000
+  avg_input_tokens: 1500
+  avg_output_tokens: 3000
+  cache_hit_rate: 0.0          # update after measuring production traces
+  batch_api: false             # set true if using Message Batches API
+  monthly_estimate_usd: 49500  # 1000 conv/day x 30 days = 30000 conv/month
+                               # input:  30000 x 1500 =  45M tok x $3/MTok  = $135
+                               # output: 30000 x 3000 =  90M tok x $15/MTok = $1350
+                               # wait — model is Sonnet 4.6 at $3/$15 per MTok
+                               # input:  45M tok x $3/MTok  = $135/month
+                               # output: 90M tok x $15/MTok = $1350/month
+                               # NOTE: $49500 target requires 33,333 conv/day;
+                               # set daily_conversations to actual scale
+
+runtime_cost:
+  platform: aws_lambda
+  per_invocation_usd: 0.000375
+  monthly_invocations: 3000000   # 3M x $0.000375 = $1125
+  framework_overhead_pct: 0.15   # Claude SDK: 10-20%; Deep Agents: 20-40%
+  monthly_estimate_usd: 1125     # 3000000 x 0.000375 = 1125.00
+
+operational_cost:
+  incidents_per_month: 2
+  hours_per_incident: 2
+  model_swaps_per_year: 4
+  hours_per_model_swap: 40
+  regression_review_hours_per_month: 18
+  engineer_hourly_rate_usd: 150
+  monthly_estimate_usd: 5300
+  # formula: (incidents x hrs_per_incident
+  #           + model_swaps_per_year/12 x hours_per_model_swap
+  #           + regression_review_hours_per_month)
+  #          x engineer_hourly_rate_usd
+  # = (2x2 + 4/12x40 + 18) x 150
+  # = (4 + 13.33 + 18) x 150 = 35.33 x 150 = 5300
+
+total_monthly_usd: 55925        # 49500 + 1125 + 5300

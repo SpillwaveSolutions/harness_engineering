@@ -1,0 +1,21 @@
+-- Daily cost per model for the travel_booking_agent, production environment
+-- Join against a separate MODEL_PRICING table to keep prices updateable
+SELECT
+    DATE(start_time)                                              AS run_date,
+    attributes->>'gen_ai.response.model'                         AS model,
+    COUNT(DISTINCT attributes->>'gen_ai.conversation.id')        AS sessions,
+    SUM(CAST(attributes->>'gen_ai.usage.input_tokens' AS INT))   AS total_input_tokens,
+    SUM(CAST(attributes->>'gen_ai.usage.output_tokens' AS INT))  AS total_output_tokens,
+    SUM(
+        CAST(attributes->>'gen_ai.usage.input_tokens' AS FLOAT)  * p.input_per_million / 1e6 +
+        CAST(attributes->>'gen_ai.usage.output_tokens' AS FLOAT) * p.output_per_million / 1e6
+    )                                                            AS cost_usd
+FROM spans s
+JOIN model_pricing p
+    ON p.model_name = attributes->>'gen_ai.response.model'
+WHERE
+    attributes->>'service.name' = 'travel_booking_agent'
+    AND resource_attributes->>'deployment.environment' = 'production'
+    AND span_name LIKE 'chat%'
+GROUP BY run_date, model
+ORDER BY run_date DESC, cost_usd DESC;

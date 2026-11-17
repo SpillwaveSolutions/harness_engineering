@@ -1,0 +1,39 @@
+---
+name: "flight-cancellation"
+description: >
+  Guide Claude through cancelling a flight booking: check eligibility,
+  compute refund amount, execute cancellation, and issue confirmation.
+version: "1.2.0"
+authors: ["travel-platform-team"]
+tags: ["booking", "cancellation", "refund"]
+allowed-tools:
+  - get_booking_details
+  - cancel_booking
+  - issue_refund
+  - send_email_confirmation
+context: fork
+when_to_use: >
+  When a customer explicitly requests to cancel an existing booking.
+  Not for date changes (use flight-date-change skill instead).
+  Not for missed-flight scenarios (use missed-flight-rebooking skill).
+---
+
+# Flight Cancellation Procedure
+
+## When this skill applies
+Cancel an active booking at the customer's explicit request.
+Do NOT proceed if the customer is asking to change dates.
+
+## Steps
+1. Call `get_booking_details` with the booking reference.
+2. Check the `is_cancellable` field. If false, explain the fare rules
+   and offer the `flight-date-change` skill as an alternative.
+3. For cancellable bookings, confirm the refund amount from
+   `refund_estimate`. State it clearly before proceeding.
+4. Get explicit customer confirmation before calling `cancel_booking`.
+5. After confirmation, call `cancel_booking` then `issue_refund`.
+6. Call `send_email_confirmation` with the cancellation reference.
+
+## Error handling
+If `cancel_booking` returns a `business` error, do not retry.
+Escalate to a human agent and explain the reason to the customer.

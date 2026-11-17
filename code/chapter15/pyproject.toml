@@ -1,0 +1,23 @@
+[project]
+name = "harness-book-chapter15"
+version = "0.1.0"
+description = "Code listings + tests for Chapter 15 — Resumable state, checkpoints, and session continuity."
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.28.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q"
+
+[tool.uv]
+package = false
